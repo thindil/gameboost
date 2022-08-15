@@ -62,16 +62,22 @@ if [ $nvidia_boost -eq 1 ]; then
    # optimization can cause lags. To disable it, set this variable to 0
    # (default). To enable it, set it to 1.
    export __GL_THREADED_OPTIMIZATIONS=0
+
    # Setting other than default value for the __GL_YIELD variable can have some
    # negative impact on performance of the Nvidia cards. Especially on the
    # older models of them. Unsetting it, sets the variable to the default
    # version. Other values are NOTHING and USLEEP.
    unset __GL_YIELD
+
    # Force the Nvidia graphic card to Maximum Performance mode. This can give a
    # small boost of FPS. Important, if you have more than one graphic card and
    # the Nvidia card isn't the first, change the number of the card in [gpu:0].
    # To get all available Nvidia cards installed, type in terminal:
    # nvidia-settings -q gpus
+   # Remember the previous value of the setting. If you plan to play in
+   # multiboxing mode, it could be a good idea to set this value manually
+   powermizer=$(nvidia-settings -tq '[gpu:0]/GPUPowerMizerMode')
+   # And set the new value for the setting
    nvidia-settings -a '[gpu:0]/GPUPowerMizerMode=1'
 fi
 
@@ -90,6 +96,10 @@ fi
 # you want to experiment with this value, it is a good idea to start with
 # border values (0 and 250) to see which one has better impact on the game
 # performance.
+# Remember the previous value of the setting. If you plan to play in
+# multiboxing mode, it could be a good idea to set this value manually
+preempt_thresh=$(sysctl -n kern.sched.preempt_thresh)
+# And set the new value for the setting
 echo $pass | sudo -S sysctl kern.sched.preempt_thresh=0
 
 # It is probably a good idea to reset the user's password stored in the
@@ -114,10 +124,10 @@ fi
 
 # Reset the kernel settings to their previous values. You may need to change
 # the values below to your settings.
-echo $pass | sudo -S sysctl kern.sched.preempt_thresh=120
+echo $pass | sudo -S sysctl kern.sched.preempt_thresh=$preempt_thresh
 
 # Reset the Nvidia graphic card settings to the previous values. Same as above,
 # if you have different the default settings, please edit the values.
 if [ $nvidia_boost -eq 1 ]; then
-   nvidia-settings -a '[gpu:0]/GPUPowerMizerMode=2'
+   nvidia-settings -a "[gpu:0]/GPUPowerMizerMode=$powermizer"
 fi
