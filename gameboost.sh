@@ -69,6 +69,18 @@ if [ $nvidia_boost -eq 1 ]; then
    # version. Other values are NOTHING and USLEEP.
    unset __GL_YIELD
 
+   # Disable synchronization with the monitor vertical refresh rate. Enabling
+   # it can cause tearing especially on dual monitors setups. Usually it is
+   # better to enable it in the game setting. To disable it, set this variable
+   # to 0 (default). To enable it, set it to 1.
+   export __GL_SYNC_TO_VBLANK=0
+
+   # Remove the limitation of the shader cache size. The cache will not be
+   # cleanup unless it changed. It can give some performance boost especially
+   # when the game uses a lot of shaders. To remove size limit, set this
+   # variable to 1 (default). To bring back size limit, remove the setting.
+   export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
+
    # Force the Nvidia graphic card to Maximum Performance mode. This can give a
    # small boost of FPS. Important, if you have more than one graphic card and
    # the Nvidia card isn't the first, change the number of the card in [gpu:0].
@@ -96,6 +108,7 @@ fi
 # you want to experiment with this value, it is a good idea to start with
 # border values (0 and 250) to see which one has better impact on the game
 # performance.
+
 # Remember the previous value of the setting. If you plan to play in
 # multiboxing mode, it could be a good idea to set this value manually
 preempt_thresh=$(sysctl -n kern.sched.preempt_thresh)
