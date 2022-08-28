@@ -81,6 +81,17 @@ if [ $nvidia_boost -eq 1 ]; then
    # variable to 1 (default). To bring back size limit, remove the setting.
    export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1
 
+   # Disable Nvidia antialiasing setting and let the game use its own. Usually
+   # it is better to enable it in the game settings. In some cases, disabling
+   # it can give small boost in performance and reduce tearing. To bring back
+   # the values from nvidia-settings, remove these lines. Available values are
+   # from 0 to 5 but not every Nvidia card (especially an ancient one) support
+   # all of them. It is also recommended to change all these settings to the
+   # one level, like 0 or 3 for each.
+   export __GL_FSAA_MODE=0
+   export __GL_DEFAULT_LOG_ANISO=0
+   export __GL_LOG_MAX_ANISO=0
+
    # Force the Nvidia graphic card to Maximum Performance mode. This can give a
    # small boost of FPS. Important, if you have more than one graphic card and
    # the Nvidia card isn't the first, change the number of the card in [gpu:0].
