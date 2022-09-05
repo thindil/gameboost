@@ -27,10 +27,14 @@
 #################
 # Configuration #
 #################
-# Enable the settings elated to the Nvidia graphic cards. You probably can
+# Enable the settings related to the Nvidia graphic cards. You probably can
 # disable it, if you don't have that card. If set to 1 (default) it is enabled,
 # when set to 0, disabled
 nvidia_boost=1
+# Enable the settings related to the Wine program. If you don't run a Windows
+# game, you can disable it. If set to 1 (default) it is enables, when set to 0,
+# disabled
+wine_boost=1
 
 # Check if a command to execute entered. If not, show the error dialog and
 # stop the script
@@ -102,6 +106,39 @@ if [ $nvidia_boost -eq 1 ]; then
    powermizer=$(nvidia-settings -tq '[gpu:0]/GPUPowerMizerMode')
    # And set the new value for the setting
    nvidia-settings -a '[gpu:0]/GPUPowerMizerMode=1'
+fi
+
+#################
+# Windows games #
+#################
+# Set some settings useful when running Windows games. It may have a different
+# impact on your performance, thus it is a good idea to test various settings
+# for them
+if [ $wine_boost -eq 1 ]; then
+   # Disable Wine logging. When a game produces a lot of Wine log messages it
+   # can have a big impact on the performance. If you want to bring the default
+   # setting, comment the line below. For the list of available debugging
+   # options for Wine, please refer to the Wine project documentation. There
+   # are too much of them to mention them all.
+   export WINEDEBUG=-all
+
+   # Disable logging for DXVK. The same as above, when DXVK produces a lot of
+   # messages it can have impact on the performance. To bring default setting,
+   # comment the line. For the list of available debugging options for DXVK,
+   # please refer to the project documentation.
+   export DXVK_LOG_LEVEL=none
+
+   # Enable asynchronous patch for DXVK. Works only when you use the special
+   # version of DXVK, https://github.com/Sporif/dxvk-async instead of the
+   # standard. Which is recommended for the better performance. To disable the
+   # patch, set the variable value to 0 or comment the line below.
+   export DXVK_ASYNC=1
+
+   # Enable using shared memory by the staging version of the Wine. Works only
+   # with wine-proton or Wine with staging patches applied. In some cases it
+   # can give a large boost in performance. To disable the setting, comment the
+   # line below.
+   export STAGING_SHARED_MEMORY=1
 fi
 
 #################
