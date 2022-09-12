@@ -35,6 +35,16 @@ nvidia_boost=1
 # game, you can disable it. If set to 1 (default) it is enables, when set to 0,
 # disabled
 wine_boost=1
+# The nice command level. Setting this value a bit higher than 0 may give some
+# perfomance boost, especially for games which heavily use system resources,
+# like a processor, a disk or a graphic card. The reason is, many games'
+# heaviest tasks are graphic rendering or reading resources from the disk which
+# are the system's tasks, thus the game wait on the others for them,
+# unnecessary using system's resources. Don't set the value below 0 as for it
+# the game will require root permissions to run, which isn't a best idea.
+# Recommended settings are between 0 and 5, any value higher can degrade
+# performance. To disable this feature completely, set it to 0.
+nice_level=3
 
 # Check if a command to execute entered. If not, show the error dialog and
 # stop the script
@@ -51,7 +61,7 @@ pass=$(zenity --password --title="GameBoost")
 # show the error dialog and stop the script.
 if [ -z $pass ]
 then
-   zenity --error --text="Cancelled." --title="GameBoost error"
+   zenity --error --text="Cancelled starting the game." --title="GameBoost error"
    return 1
 fi
 
@@ -170,7 +180,11 @@ pass=""
 # Run the selected command, passes as the first argument to the script. If you
 # want to execute command with arguments, pass the whole command in quotes. For
 # example ./gameboost.sh "mygame --somearg --anotherarg"
-$1
+if [ $nice_level -eq 0 ]; then
+   $1
+else
+   nice -n $nice_level $1
+fi
 
 # Ask for password again to execute sudo command via zenity password dialog
 pass=$(zenity --password --title="GameBoost")
@@ -179,7 +193,7 @@ pass=$(zenity --password --title="GameBoost")
 # show the error dialog and stop the script.
 if [ -z $pass ]
 then
-   zenity --error --text="Cancelled." --title="GameBoost error"
+   zenity --error --text="Cancelled restoring the previous settings." --title="GameBoost error"
    return 1
 fi
 
