@@ -65,6 +65,13 @@ then
    return 1
 fi
 
+# Check if the user entered the proper password. If not, show the dialog with
+# the information about the problem and stop the script.
+if ! echo "$pass" | sudo -S ls "$HOME" > /dev/null; then
+   zenity --error --text="Invalid password entered." --title="GameBoost error"
+   exit 1
+fi
+
 #################
 # Nvidia cards  #
 #################
