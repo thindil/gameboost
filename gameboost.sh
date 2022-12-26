@@ -59,7 +59,7 @@ pass=$(zenity --password --title="GameBoost")
 
 # If the user entered an empty password, or cancelled the password dialog,
 # show the error dialog and stop the script.
-if [ -z $pass ]
+if [ -z "$pass" ]
 then
    zenity --error --text="Cancelled starting the game." --title="GameBoost error"
    return 1
@@ -178,7 +178,7 @@ fi
 # multiboxing mode, it could be a good idea to set this value manually
 preempt_thresh=$(sysctl -n kern.sched.preempt_thresh)
 # And set the new value for the setting
-echo $pass | sudo -S sysctl kern.sched.preempt_thresh=0
+echo "$pass" | sudo -S sysctl kern.sched.preempt_thresh=0
 
 # It is probably a good idea to reset the user's password stored in the
 # memory before we run the command.
@@ -190,7 +190,7 @@ pass=""
 if [ $nice_level -eq 0 ]; then
    $1
 else
-   nice -n $nice_level $1
+   nice -n $nice_level "$1"
 fi
 
 # Ask for password again to execute sudo command via zenity password dialog
@@ -198,7 +198,7 @@ pass=$(zenity --password --title="GameBoost")
 
 # If the user entered an empty password, or cancelled the password dialog,
 # show the error dialog and stop the script.
-if [ -z $pass ]
+if [ -z "$pass" ]
 then
    zenity --error --text="Cancelled restoring the previous settings." --title="GameBoost error"
    return 1
@@ -206,7 +206,7 @@ fi
 
 # Reset the kernel settings to their previous values. You may need to change
 # the values below to your settings.
-echo $pass | sudo -S sysctl kern.sched.preempt_thresh=$preempt_thresh
+echo "$pass" | sudo -S sysctl kern.sched.preempt_thresh="$preempt_thresh"
 
 # Reset the Nvidia graphic card settings to the previous values. Same as above,
 # if you have different the default settings, please edit the values.
