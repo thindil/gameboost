@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright © 2022 Bartek Jasicki <thindil@laeran.pl>
+# Copyright © 2022-2024 Bartek Jasicki
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -112,6 +112,13 @@ if [ $nvidia_boost -eq 1 ]; then
    export __GL_FSAA_MODE=0
    export __GL_DEFAULT_LOG_ANISO=0
    export __GL_LOG_MAX_ANISO=0
+
+   # In newest versions of Vulkan, here can be an issue with finding its
+   # specification file related to the Nvidia driver. The problem is
+   # especially visible when using Wine. The path to them, must be set
+   # manually. If you have that file in different location, please update the
+   # setting.
+   export VK_ICD_FILENAMES=/usr/local/share/vulkan/icd.d/nvidia_icd.json
 
    # Force the Nvidia graphic card to Maximum Performance mode. This can give a
    # small boost of FPS. Important, if you have more than one graphic card and
